@@ -1,21 +1,24 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 import { User } from '../_models/user';
+import { AuthenticationService } from '../_services/authentication.service';
 import { UserService } from '../_services/user.service';
 
 @Component({ templateUrl: 'home.component.html' })
 export class HomeComponent {
     loading = false;
-    users: User[];
 
-    constructor(private userService: UserService) { }
+    constructor(private authenticationService: AuthenticationService,private router:Router) { }
 
     ngOnInit() {
         this.loading = true;
-        this.userService.getAll().pipe(first()).subscribe(users => {
-            this.loading = false;
-            this.users = users;
-        });
+      
+    }
+
+    logout() {
+        this.authenticationService.logout();
+        this.router.navigate(['/login']);
     }
 }

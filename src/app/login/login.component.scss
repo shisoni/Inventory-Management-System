@@ -3,5 +3,24 @@
     background-color: royalblue;
     border-color: royalblue;
     width: 100px;
-    margin-left: 200px;
+    margin-left: 130px;
+}
+
+
+:host ::ng-deep .card-header{
+
+    background-color: black;
+    color: whitesmoke;
+    font-size: 15px;
+}
+
+:host ::ng-deep .card{
+
+    width: 400px;
+    margin-left: 100px;
+}
+
+:host ::ng-deep .card-body {
+    background-color: #3f4b5b;
+    color: whitesmoke;
 }

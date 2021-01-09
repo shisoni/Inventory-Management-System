@@ -29,16 +29,13 @@ app.use(function(req,res,next){
 });
 
 
-var database,collection1;
+var database,collection1,collection2,token;
 
 
 
 
 
 app.post("/api/login/", (request, response) => {
-
-    
-    
 
     collection1.findOne({username:request.body.username,password:request.body.password},function(error, result)  {
        if(error) {
@@ -50,7 +47,7 @@ app.post("/api/login/", (request, response) => {
                username : request.body.username,
                password : request.body.password
            };
-           var token = jwt.sign(payload,'abcxyz',{expiresIn:1440});
+        token = jwt.sign(payload,'abcxyz',{expiresIn:1440});
        }
       
        response.status(200).json({"status":"Authenticated","token":token});
@@ -58,9 +55,46 @@ app.post("/api/login/", (request, response) => {
  
 });
 
+app.post("/api/assets/", (request, response) => {
+
+    getNextSequence("assetId", function(err, result){
+        if(!err){
+           collection2.insert({
+        "_id":result,
+        "assetName":request.body.assetName,
+        "registrationDate":request.body.registrationDate});
+           }
+           console.log(result);
+        });
+
+           
+  
+ 
+});
+
+app.get("/api/assets/:token", (request, response) => {
+
+    var access_token= request.params.token;
+    collection2.find({}).toArray((error, result) => {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        else if(access_token == token)
+        {
+            response.send(result);
+        }
+        
+    });
+ 
+});
 
 
-
+function getNextSequence(name, callback) {
+    collection3.findAndModify( { _id: name }, null, { $inc: { seq: 1 } }, function(err, result){
+        if(err) callback(err, result);
+        callback(err, result.value.seq);
+    } );
+}
 
   
 server.on('listening',function(){
@@ -69,12 +103,14 @@ server.on('listening',function(){
 
 
 server.listen(4000, () => {
-    MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
+    MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true,useFindAndModify: false }, (error, client) => {
         if(error) {
             throw error;
         }
         database = client.db(DATABASE_NAME);
         collection1 = database.collection("User");
+        collection2 = database.collection("Assets");
+        collection3 = database.collection("Counters");
         console.log("Connected to `" + DATABASE_NAME + "`!");
     });
 

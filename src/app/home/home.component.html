@@ -1,3 +1,5 @@
+<div class="container">
+
 <nav class="navbar navbar-expand navbar-dark bg-dark">
     <div class="navbar-nav">
         <a class="nav-item nav-link" routerLink="/">Home</a>
@@ -14,19 +16,19 @@
       </ng-template> </p-toolbar> -->
       <div class="row menuStyle">
           <div style="float: left;">
-              <button class="btn"><i class="fa fa-plus"></i> Add Customer</button> &nbsp;
-              <button class="btn"><i class="fa fa-trash"></i> Remove Customer</button>
+              <button class="btn" (click)="insertAsset()"><i class="fa fa-plus"></i> Add Assets</button> &nbsp;
+              <button class="btn"><i class="fa fa-trash"></i> Remove Assets</button>
           </div>
          
       </div>
 
  
-  <p-table #dt1 [value]="" [rows]="10" [paginator]="true"
+  <p-table #dt1 [value]="assets" [rows]="10" [paginator]="true"
        [rowHover]="true" dataKey="id"
-      currentPageReportTemplate="Showing 0 to 0 of 0 entries" [globalFilterFields]="[]" [showCurrentPageReport]="true">
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [globalFilterFields]="['assetName','registrationDate']" [showCurrentPageReport]="true">
       <ng-template pTemplate="caption">
           
-              <h5 style="float: left;margin: 0px;color: whitesmoke;font-size: 14px;">Customer Details</h5>
+              <h5 style="float: left;margin: 0px;color: whitesmoke;font-size: 14px;">Assets Details</h5>
              <span style="float: right;">
                  
                   <input type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search..." id="inputStyle"  />
@@ -36,39 +38,68 @@
           
       </ng-template>
       <ng-template pTemplate="header">
-          <tr>
+          <tr style="text-align: center;">
               <th style="width: 3rem">
                   <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
               </th>
-              <th pSortableColumn="">Name <p-sortIcon field=""></p-sortIcon></th>
-              <th pSortableColumn="">Address <p-sortIcon field=""></p-sortIcon></th>
-              <th pSortableColumn="">Amount <p-sortIcon field=""></p-sortIcon></th>
-              <th pSortableColumn="">Item Purchased <p-sortIcon field=""></p-sortIcon></th>
-              <th pSortableColumn="">Transaction Date<p-sortIcon field=""></p-sortIcon></th>
-              <th></th>
+              <th pSortableColumn="">Asset ID <p-sortIcon field="_id"></p-sortIcon></th>
+              <th pSortableColumn="">Name <p-sortIcon field="assetName"></p-sortIcon></th>
+              <th pSortableColumn="">Registration Date<p-sortIcon field="registrationDate"></p-sortIcon></th>
+              <th colspan="2">Actions</th>
           </tr>
       </ng-template>
-     <ng-template pTemplate="body" let-customer>
-          <tr>
+     <ng-template pTemplate="body" let-asset>
+          <tr style="text-align: center;">
               <td>
-                  <p-tableCheckbox [value]=""></p-tableCheckbox>
+                  <p-tableCheckbox [value]="asset._id"></p-tableCheckbox>
               </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{asset._id}}</td>
+              <td>{{asset.assetName}}</td>
+              <td>{{asset.registrationDate}}</td>
+            
              
              
+             
               <td>
-                  <button class="btn"><i class="fa fa-trash"></i></button>
-              </td>
+                <button class="btn" style="background-color: green;" (click)="editAssets(asset._id)"><i class="fa fa-edit"></i></button>
+            </td>
+            <td>
+                <button class="btn" style="background-color: red;"><i class="fa fa-trash"></i></button>
+            </td>
+          
           </tr>
       </ng-template> 
       <ng-template pTemplate="summary">
           <div class="p-d-flex p-ai-center p-jc-between">
-              In total there are 0 customers.
+            In total there are {{assets ? assets.length : 0 }} assets.
           </div>
       </ng-template>
   </p-table>
   </div>
+
+</div>
+  <p-dialog header="Asset Details" [(visible)]="insertDialog" [modal]="true" [style]="{width: '450px'}" [baseZIndex]="10000">
+    <form #myFormAsset = "ngForm" [formGroup]="formAsset" (ngSubmit)="saveAsset()" style="font-family:sans-serif;">
+        
+        <div class="form-group">
+            <label for="assetName">Asset Name</label>
+            <input type="text" name="assetName" formControlName="assetName" class="form-control"required>
+          </div>
+          
+        
+            <div class="form-group">
+                <label for="registrationDate">Registration Date</label>
+                <input type="date"  name="registrationDate"  formControlName="registrationDate" class="form-control" required>
+            </div> 
+
+       
+        
+        <div style="float: right;">
+            <!--<button type="submit" [disabled]="!myForm.form.valid" class="btn btn-primary btn-sm float-left shopNow" style=" font-family: sans-serif;background-color: black;border-color:black; display: block;">Submit</button>-->
+            <button class="btn" (click)="hideInsertDialog()"><i class="fa fa-times"></i> Cancel</button> &nbsp;
+            <button class="btn"   [disabled]="!myFormAsset.form.valid" type="submit"><i class="fa fa-check"></i> Save</button>
+        </div>
+        
+        
+      </form>
+</p-dialog>

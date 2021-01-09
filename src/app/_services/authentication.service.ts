@@ -23,7 +23,7 @@ export class AuthenticationService {
                 localStorage.setItem('access_token',user.token);
                 
             
-                this.router.navigate(['/']);
+                this.router.navigate(['/home']);
             });
     }
 

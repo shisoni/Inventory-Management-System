@@ -5,11 +5,11 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_helpers/auth.guard';
 
 const routes: Routes = [
-    { path: '',  loadChildren: () => import('./home/home.module').then((m) => m.HomeModule), canActivate: [AuthGuard] },
+    { path: 'home',  loadChildren: () => import('./home/home.module').then((m) => m.HomeModule), canActivate: [AuthGuard] },
     { path: 'login', loadChildren: () => import('./login/login.module').then((m) => m.LoginModule)},
 
     // otherwise redirect to home
-    { path: '**', redirectTo: '' }
+    { path: '**', redirectTo: 'login' }
 ];
 
 

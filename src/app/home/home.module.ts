@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule,CurrencyPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { LoginComponent } from './login.component';
+import { HomeComponent } from './home.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DropdownModule,TabViewModule,ToastModule,ToolbarModule,FileUploadModule,TableModule,DialogModule,ConfirmDialogModule} from 'primeng';
 
@@ -8,6 +8,6 @@ import {DropdownModule,TabViewModule,ToastModule,ToolbarModule,FileUploadModule,
 
 @NgModule({
     imports: [CommonModule,DropdownModule,ReactiveFormsModule, TabViewModule,FormsModule,ConfirmDialogModule,DialogModule,TableModule,ToastModule,ToolbarModule,FileUploadModule],
-    declarations: [LoginComponent]
+    declarations: [HomeComponent]
 })
-export class LoginModule {}
+export class HomeModule {}

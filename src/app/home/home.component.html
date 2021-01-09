@@ -6,11 +6,69 @@
   </nav>
   
 
-<div class="card mt-4">
-    <h4 class="card-header">You're logged in with Angular 8 & JWT!!</h4>
-    <div class="card-body">
-        <h6>Users from secure api end point</h6>
-       
-       
-    </div>
-</div>
+  <div class="card">
+  <!-- <p-toolbar styleClass="p-mb-4">
+      <ng-template pTemplate="left">
+          <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" ></button>
+          <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"></button>
+      </ng-template> </p-toolbar> -->
+      <div class="row menuStyle">
+          <div style="float: left;">
+              <button class="btn"><i class="fa fa-plus"></i> Add Customer</button> &nbsp;
+              <button class="btn"><i class="fa fa-trash"></i> Remove Customer</button>
+          </div>
+         
+      </div>
+
+ 
+  <p-table #dt1 [value]="" [rows]="10" [paginator]="true"
+       [rowHover]="true" dataKey="id"
+      currentPageReportTemplate="Showing 0 to 0 of 0 entries" [globalFilterFields]="[]" [showCurrentPageReport]="true">
+      <ng-template pTemplate="caption">
+          
+              <h5 style="float: left;margin: 0px;color: whitesmoke;font-size: 14px;">Customer Details</h5>
+             <span style="float: right;">
+                 
+                  <input type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search..." id="inputStyle"  />
+              </span> 
+             
+
+          
+      </ng-template>
+      <ng-template pTemplate="header">
+          <tr>
+              <th style="width: 3rem">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th pSortableColumn="">Name <p-sortIcon field=""></p-sortIcon></th>
+              <th pSortableColumn="">Address <p-sortIcon field=""></p-sortIcon></th>
+              <th pSortableColumn="">Amount <p-sortIcon field=""></p-sortIcon></th>
+              <th pSortableColumn="">Item Purchased <p-sortIcon field=""></p-sortIcon></th>
+              <th pSortableColumn="">Transaction Date<p-sortIcon field=""></p-sortIcon></th>
+              <th></th>
+          </tr>
+      </ng-template>
+     <ng-template pTemplate="body" let-customer>
+          <tr>
+              <td>
+                  <p-tableCheckbox [value]=""></p-tableCheckbox>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+             
+             
+              <td>
+                  <button class="btn"><i class="fa fa-trash"></i></button>
+              </td>
+          </tr>
+      </ng-template> 
+      <ng-template pTemplate="summary">
+          <div class="p-d-flex p-ai-center p-jc-between">
+              In total there are 0 customers.
+          </div>
+      </ng-template>
+  </p-table>
+  </div>

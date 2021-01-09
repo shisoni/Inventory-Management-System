@@ -23,7 +23,7 @@ app.use(BodyParser.urlencoded({ extended: true }));
 app.use(function(req,res,next){
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers','X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers','X-Requested-With,content-type,authorization');
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
@@ -72,9 +72,9 @@ app.post("/api/assets/", (request, response) => {
  
 });
 
-app.get("/api/assets/:token", (request, response) => {
+app.get("/api/assets/", (request, response) => {
 
-    var access_token= request.params.token;
+    var access_token= request.headers.authorization;
     collection2.find({}).toArray((error, result) => {
         if(error) {
             return response.status(500).send(error);
@@ -87,6 +87,24 @@ app.get("/api/assets/:token", (request, response) => {
     });
  
 });
+
+app.get("/api/assets/:_id", (request, response) => {
+
+    var id= request.params._id;
+    var access_token= request.headers.authorization;
+    collection2.find({_id:id}).toArray((error, result) => {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        else if(access_token == token)
+        {
+            response.send(result);
+        }
+        
+    });
+ 
+});
+
 
 
 function getNextSequence(name, callback) {

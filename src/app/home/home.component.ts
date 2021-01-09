@@ -10,8 +10,11 @@ import { UserService } from '../_services/user.service';
 export class HomeComponent {
     loading = false;
     insertDialog : boolean = false;
+    editDialog : boolean = false;
     formAsset : FormGroup;
+    editAsset : FormGroup;
     assets: any;
+    asset:any;
     flag:boolean = false;
     dataRefresh:any;
     constructor(private userService: UserService,private authenticationService: AuthenticationService,private router:Router,private fb: FormBuilder) { 
@@ -50,6 +53,16 @@ export class HomeComponent {
         this.insertDialog = true;
       }
 
+      editAssetValues(_id){
+        this.userService.getAssetById(_id).subscribe(asset => this.asset = asset);
+        this.editAsset = this.fb.group({
+          assetName: [this.asset.assetName, Validators.required],
+          registrationDate: [this.asset.registrationDate, Validators.required]
+      });
+        this.editDialog = true;
+
+      }
+
       hideInsertDialog() {
         this.formAsset.reset();
         this.insertDialog = false;
@@ -57,6 +70,9 @@ export class HomeComponent {
         
       }
 
+      updateAsset(){
+
+      }
 
       saveAsset(){
        this.userService.saveAsset(this.formAsset.value);

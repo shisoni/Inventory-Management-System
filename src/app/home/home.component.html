@@ -17,7 +17,6 @@
       <div class="row menuStyle">
           <div style="float: left;">
               <button class="btn" (click)="insertAsset()"><i class="fa fa-plus"></i> Add Assets</button> &nbsp;
-              <button class="btn"><i class="fa fa-trash"></i> Remove Assets</button>
           </div>
          
       </div>
@@ -39,20 +38,20 @@
       </ng-template>
       <ng-template pTemplate="header">
           <tr style="text-align: center;">
-              <th style="width: 3rem">
+            <!--  <th style="width: 3rem">
                   <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-              </th>
-              <th pSortableColumn="">Asset ID <p-sortIcon field="_id"></p-sortIcon></th>
-              <th pSortableColumn="">Name <p-sortIcon field="assetName"></p-sortIcon></th>
-              <th pSortableColumn="">Registration Date<p-sortIcon field="registrationDate"></p-sortIcon></th>
+              </th>-->
+              <th pSortableColumn="_id">Asset ID <p-sortIcon field="_id"></p-sortIcon></th>
+              <th pSortableColumn="assetName">Name <p-sortIcon field="assetName"></p-sortIcon></th>
+              <th pSortableColumn="registrationDate">Registration Date<p-sortIcon field="registrationDate"></p-sortIcon></th>
               <th colspan="2">Actions</th>
           </tr>
       </ng-template>
      <ng-template pTemplate="body" let-asset>
           <tr style="text-align: center;">
-              <td>
+              <!--<td>
                   <p-tableCheckbox [value]="asset._id"></p-tableCheckbox>
-              </td>
+              </td> -->
               <td>{{asset._id}}</td>
               <td>{{asset.assetName}}</td>
               <td>{{asset.registrationDate}}</td>
@@ -64,7 +63,7 @@
                 <button class="btn" style="background-color: green;" (click)="editAssetValues(asset._id)"><i class="fa fa-edit"></i></button>
             </td>
             <td>
-                <button class="btn" style="background-color: red;"><i class="fa fa-trash"></i></button>
+                <button class="btn" style="background-color: red;" (click)="deleteAsset(asset._id)"><i class="fa fa-trash"></i></button>
             </td>
           
           </tr>
@@ -106,25 +105,26 @@
 
 
 <p-dialog header="Asset Details" [(visible)]="editDialog" [modal]="true" [style]="{width: '450px'}" [baseZIndex]="10000">
-    <form #myFormAsset = "ngForm" [formGroup]="editAsset" (ngSubmit)="updateAsset()" style="font-family:sans-serif;">
+    <form #myEditForm = "ngForm" [formGroup]="editAsset" (ngSubmit)="updateAsset()" style="font-family:sans-serif;">
         
+        <input type="hidden" name="_id" formControlName="_id"  [value]="assetId" class="form-control"required>
         <div class="form-group">
             <label for="assetName">Asset Name</label>
-            <input type="text" name="assetName" formControlName="assetName"  value="" class="form-control"required>
+            <input type="text" name="assetName" formControlName="assetName"  [value]="assetName" class="form-control"required>
           </div>
           
         
             <div class="form-group">
                 <label for="registrationDate">Registration Date</label>
-                <input type="date"  name="registrationDate"  formControlName="registrationDate" value="" class="form-control" required>
+                <input type="date"  name="registrationDate"  formControlName="registrationDate" [value]="registrationDate" class="form-control" required>
             </div> 
 
        
         
         <div style="float: right;">
             <!--<button type="submit" [disabled]="!myForm.form.valid" class="btn btn-primary btn-sm float-left shopNow" style=" font-family: sans-serif;background-color: black;border-color:black; display: block;">Submit</button>-->
-            <button class="btn" (click)="hideInsertDialog()"><i class="fa fa-times"></i> Cancel</button> &nbsp;
-            <button class="btn"   [disabled]="!myFormAsset.form.valid" type="submit"><i class="fa fa-check"></i> Save</button>
+            <button class="btn" (click)="hideEditDialog()"><i class="fa fa-times"></i> Cancel</button> &nbsp;
+            <button class="btn" type="submit"><i class="fa fa-check"></i> Save</button>
         </div>
         
         

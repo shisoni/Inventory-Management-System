@@ -12,6 +12,20 @@ export class UserService {
         return this.http.post(`${environment.apiUrl}/api/assets/`,asset).subscribe(data=>{});
     }
 
+    updateAsset(asset: Assets) {     
+        return this.http.put(`${environment.apiUrl}/api/assets/`,asset).subscribe(data=>{});
+    }
+
+    deleteAsset(id)
+    {
+        let header = new HttpHeaders().set(
+            "authorization",
+             this.authenticationService.getAccessToken()
+          );
+
+        return this.http.delete(`${environment.apiUrl}/api/assets/`+id).subscribe(data=>{});
+    }
+
     getAllAssets()
     {
         let header = new HttpHeaders().set(
@@ -21,11 +35,11 @@ export class UserService {
         return this.http.get(`${environment.apiUrl}/api/assets/`,{headers:header});
     }
 
-    getAssetById(_id){
+    getAssetById(id){
         let header = new HttpHeaders().set(
             "authorization",
              this.authenticationService.getAccessToken()
           );
-        return this.http.get(`${environment.apiUrl}/api/assets/`+_id,{headers:header});
+        return this.http.get(`${environment.apiUrl}/api/assets/`+id,{headers:header});
     }
 }

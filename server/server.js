@@ -25,6 +25,7 @@ app.use(function(req,res,next){
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers','X-Requested-With,content-type,authorization');
     res.setHeader('Access-Control-Allow-Credentials', true);
+    //req.setHeader('Access-Control-Allow-Headers','authorization');
     next();
 });
 
@@ -36,21 +37,27 @@ var database,collection1,collection2,token;
 
 
 app.post("/api/login/", (request, response) => {
-
-    collection1.findOne({username:request.body.username,password:request.body.password},function(error, result)  {
+    
+   var user = request.body.username;
+   var pass = request.body.password;
+    //console.log("Printing:" + user + " Password: "+ pass);
+    collection1.findOne({username:user,password:pass},function(error, result){
        if(error) {
            return response.status(500).send(error);
        }
        else
        {
+        console.log(result);
            const payload = {
                username : request.body.username,
                password : request.body.password
            };
         token = jwt.sign(payload,'abcxyz',{expiresIn:1440});
+        
+    response.status(200).json({"status":"Authenticated","token":token});
        }
+       
       
-       response.status(200).json({"status":"Authenticated","token":token});
    });
  
 });
@@ -66,9 +73,25 @@ app.post("/api/assets/", (request, response) => {
            }
            console.log(result);
         });
+ 
+});
 
-           
-  
+app.put("/api/assets/", (request, response) => {
+
+    
+    var access_token= request.headers.authorization;
+    collection2.updateOne(
+        {"_id":parseInt(request.body._id)},
+        {$set:request.body},function(error, result) {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        else 
+        {
+            response.send(result);
+        }
+        
+    });
  
 });
 
@@ -88,11 +111,12 @@ app.get("/api/assets/", (request, response) => {
  
 });
 
-app.get("/api/assets/:_id", (request, response) => {
+app.delete("/api/assets/:_id", (request, response) => {
 
-    var id= request.params._id;
+    var id = request.params._id;
+    console.log(id);
     var access_token= request.headers.authorization;
-    collection2.find({_id:id}).toArray((error, result) => {
+    collection2.deleteOne({"_id":parseInt(id)}).toArray((error, result) => {
         if(error) {
             return response.status(500).send(error);
         }
@@ -104,6 +128,25 @@ app.get("/api/assets/:_id", (request, response) => {
     });
  
 });
+
+app.get("/api/assets/:id", (request, response) => {
+
+    var id= request.params.id;
+    var access_token= request.headers.authorization;
+    collection2.find({"_id":parseInt(id)}).toArray((error, result) => {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        else if(access_token == token)
+        {
+            response.send(result);
+        }
+        
+    });
+ 
+});
+
+
 
 
 

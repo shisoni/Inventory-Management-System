@@ -36,7 +36,7 @@ export class HomeComponent {
     ngOnInit() {
         this.loading = true;
         this.callServices(true);
-    this.refreshData();
+        this.refreshData();
       
     }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { MessageService} from '../_services/message.service';
 
 import { AuthenticationService } from '../_services/authentication.service';
 
@@ -12,12 +13,14 @@ export class LoginComponent implements OnInit {
     submitted = false;
     returnUrl: string;
     error = '';
+    dataRefresh:any;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private messageService:MessageService
     ) 
     {
         this.loginForm= this.formBuilder.group({
@@ -27,15 +30,27 @@ export class LoginComponent implements OnInit {
         }
 
     ngOnInit() {
-       this.onSubmit();
+      
+       //console.log(this.messageService.currentMessage.subscribe);
+     
+       
+    
         
     }
 
-    // convenience getter for easy access to form fields
-    get f() { return this.loginForm.controls; }
+
+    giveErrorMessage()
+    {
+
+        this.loading = false;
+        this.loginForm.reset();
+        this.error = 'User Not Found Or Invalid Credentials';
+        
+    }
 
     onSubmit() {
-        this.submitted = true;
+
+       this.submitted = true;
 
         // stop here if form is invalid
         if (this.loginForm.invalid) {
@@ -44,5 +59,6 @@ export class LoginComponent implements OnInit {
 
         this.loading = true;
         this.authenticationService.login(this.loginForm.value);
+       
     }
 }

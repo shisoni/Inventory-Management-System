@@ -11,6 +11,7 @@ const DATABASE_NAME = "InventoryManagementSystem";
 
 const app = express();
 const jwt    = require('jsonwebtoken');
+const { errorComparator } = require("tslint/lib/verify/lintError");
 
 //const port = process.env.PORT || 4200;
 
@@ -38,27 +39,27 @@ var database,collection1,collection2,token;
 
 app.post("/api/login/", (request, response) => {
     
+    
    var user = request.body.username;
    var pass = request.body.password;
-    //console.log("Printing:" + user + " Password: "+ pass);
-    collection1.findOne({username:user,password:pass},function(error, result){
-       if(error) {
-           return response.status(500).send(error);
-       }
-       else
-       {
+   
+   var query = {username: user, password: pass}
+collection1.findOne({"username":user},function(error,result){
+
+    if(error){
+        return response.status(500);
+    }else{
         console.log(result);
-           const payload = {
-               username : request.body.username,
-               password : request.body.password
-           };
-        token = jwt.sign(payload,'abcxyz',{expiresIn:1440});
-        
-    response.status(200).json({"status":"Authenticated","token":token});
-       }
-       
-      
-   });
+        const payload = {
+            username : user,
+            password : pass
+        };
+     token = jwt.sign(payload,'abcxyz',{expiresIn:1440});
+     return response.status(200).json({"status":"Authenticated","token":token});
+    }
+
+});
+    
  
 });
 

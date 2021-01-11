@@ -23,7 +23,7 @@ export class UserService {
              this.authenticationService.getAccessToken()
           );
 
-        return this.http.delete(`${environment.apiUrl}/api/assets/`+id).subscribe(data=>{});
+        return this.http.delete(`${environment.apiUrl}/api/assets/`+id,{headers:header}).subscribe(data=>{});
     }
 
     getAllAssets()
